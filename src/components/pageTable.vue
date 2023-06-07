@@ -1,10 +1,5 @@
 <template>
-  <navButtons></navButtons>
-  <h1>{{ title }}</h1>
-  <input type="text" ref="title" />
-  <input type="text" ref="year" />
-  <button @click="handleClick">Add movie</button>
-
+  <h1>Page Table</h1>
   <li v-for="movie in movies" :key="movie.id">
     <p>
       {{ movie.id }} - {{ movie.name }} - {{ movie.year }} -
@@ -16,7 +11,6 @@
 
 <script>
 // import HelloWorld from "./components/HelloWorld.vue";
-import navButtons from "./components/navButtons.vue";
 
 export default {
   name: "App",
@@ -24,6 +18,7 @@ export default {
     return {
       title: "My Movies",
       showMovies: true,
+      // TODO: Wywalić ze struktury filmu przyciski...
       movies: [
         {
           id: 1,
@@ -55,10 +50,16 @@ export default {
       const year = this.$refs.year.value;
 
       this.movies.push({ id: this.movies.length + 1, name: title, year: year });
+      // TODO: dodać sprawdzanie czy ID wolny
+    },
+    deleteMovie() {
+      // Usuwanie po numerze ID
+    },
+    editMovie() {
+      // Wyświetlenie widoku modalnego
     },
   },
   components: {
-    navButtons,
     //HelloWorld,
     // navButtons, pageTable, *modalWindow
   },
