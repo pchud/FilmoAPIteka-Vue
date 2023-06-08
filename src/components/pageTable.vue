@@ -1,78 +1,54 @@
 <template>
-  <h1>Page Table</h1>
-  <li v-for="movie in movies" :key="movie.id">
-    <p>
-      {{ movie.id }} - {{ movie.name }} - {{ movie.year }} -
-      {{ movie.editAction }}-
-      {{ movie.deleteAction }}
-    </p>
-  </li>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Year</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Remove</th>
+      </tr>
+    </thead>
+    <tbody v-for="movie in movies" :key="movie.id">
+      <movieRecord
+        @delete-movie="deleteMovieInData"
+        :external-data="movie"
+      ></movieRecord>
+    </tbody>
+  </table>
 </template>
 
 <script>
-// import HelloWorld from "./components/HelloWorld.vue";
+import moviesData from "../data/moviesData.json";
+import movieRecord from "../components/movieRecord.vue";
+import { allMovies } from "../allMovies";
 
 export default {
-  name: "App",
+  props: {},
   data() {
     return {
       title: "My Movies",
       showMovies: true,
-      // TODO: Wywalić ze struktury filmu przyciski...
-      movies: [
-        {
-          id: 1,
-          name: "Władca Piersieni",
-          year: "2003",
-          editAction: "Edytuj",
-          deleteAction: "Usuń",
-        },
-        {
-          id: 2,
-          name: "Matrix",
-          year: "2007",
-          editAction: "Edytuj",
-          deleteAction: "Usuń",
-        },
-        {
-          id: 3,
-          name: "Avatar",
-          year: "2015",
-          editAction: "Edytuj",
-          deleteAction: "Usuń",
-        },
-      ],
+      movies: allMovies,
     };
   },
-  methods: {
-    handleClick() {
-      const title = this.$refs.title.value;
-      const year = this.$refs.year.value;
+  mounted() {
+    // this.loadMovies();
+  },
 
-      this.movies.push({ id: this.movies.length + 1, name: title, year: year });
-      // TODO: dodać sprawdzanie czy ID wolny
-    },
-    deleteMovie() {
-      // Usuwanie po numerze ID
+  methods: {
+    deleteMovieInData(movieId) {
+      // TODO: Dodać otwieranie popupu z potwierdzeniem.
+      // this.movies = this.movies.filter((movie) => movie.id !== movieId);
     },
     editMovie() {
       // Wyświetlenie widoku modalnego
     },
   },
   components: {
-    //HelloWorld,
-    // navButtons, pageTable, *modalWindow
+    movieRecord,
   },
 };
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>

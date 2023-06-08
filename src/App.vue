@@ -1,22 +1,29 @@
 <template>
-  <navButtons></navButtons>
-  <h1>{{ title }}</h1>
-  <input type="text" ref="title" />
-  <input type="text" ref="year" />
-  <button @click="handleClick">Add movie</button>
+  <div>
+    <navButtons></navButtons>
+    <modalWindow></modalWindow>
+    <!-- <modalPopupTest></modalPopupTest> -->
+    <h1>{{ title }}</h1>
+    <form>
+      <label for="title">Title</label><br />
+      <input type="text" id="title" ref="title" /><br />
+      <label for="year">Year</label><br />
+      <input type="number" id="year" ref="year" /><br />
+      <button @click="handleClick">Add movie</button>
+    </form>
 
-  <li v-for="movie in movies" :key="movie.id">
-    <p>
-      {{ movie.id }} - {{ movie.name }} - {{ movie.year }} -
-      {{ movie.editAction }}-
-      {{ movie.deleteAction }}
-    </p>
-  </li>
+    <pageTable></pageTable>
+  </div>
 </template>
 
 <script>
-// import HelloWorld from "./components/HelloWorld.vue";
+import pageTable from "./components/pageTable.vue";
 import navButtons from "./components/navButtons.vue";
+import modalWindow from "./components/modalWindow.vue";
+// import modalPopupTest from "./components/modalPopupTest.vue";
+// import moviesData from "../data/moviesData.json";
+
+import { allMovies } from "./allMovies";
 
 export default {
   name: "App",
@@ -24,41 +31,25 @@ export default {
     return {
       title: "My Movies",
       showMovies: true,
-      movies: [
-        {
-          id: 1,
-          name: "Władca Piersieni",
-          year: "2003",
-          editAction: "Edytuj",
-          deleteAction: "Usuń",
-        },
-        {
-          id: 2,
-          name: "Matrix",
-          year: "2007",
-          editAction: "Edytuj",
-          deleteAction: "Usuń",
-        },
-        {
-          id: 3,
-          name: "Avatar",
-          year: "2015",
-          editAction: "Edytuj",
-          deleteAction: "Usuń",
-        },
-      ],
+      // movies: moviesData,
+      allMovies,
     };
   },
   methods: {
     handleClick() {
+      console.log("test", allMovies);
+
       const title = this.$refs.title.value;
       const year = this.$refs.year.value;
 
-      this.movies.push({ id: this.movies.length + 1, name: title, year: year });
+      // this.movies.push({ id: this.movies.length + 1, name: title, year: year });
     },
   },
   components: {
     navButtons,
+    pageTable,
+    modalWindow,
+    // modalPopupTest,
     //HelloWorld,
     // navButtons, pageTable, *modalWindow
   },
@@ -72,6 +63,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 0px;
 }
 </style>
