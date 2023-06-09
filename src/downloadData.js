@@ -3,6 +3,7 @@ import cors from "cors";
 const apiUrl = "https://filmy.programdemo.pl/MyMovies";
 
 export async function fetchDataFromAPI() {
+  console.log("Fetch started");
   try {
     const response = await axios.get(apiUrl);
     return response.data;

@@ -73,6 +73,9 @@ export default {
     },
     downloadMovies() {
       console.log("Download movies - API not connected");
+      const data = fetchDataFromAPI();
+      console.log(data);
+
       // const data = fetchDataFromAPI();
       // console.log(data);
       // console.log("downloaded");
