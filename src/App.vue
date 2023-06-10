@@ -1,57 +1,43 @@
 <template>
   <div>
-    <navButtons></navButtons>
-    <modalWindow></modalWindow>
-    <!-- <modalPopupTest></modalPopupTest> -->
+    <nav-buttons :title="title"></nav-buttons>
     <h1>{{ title }}</h1>
-    <form>
-      <label for="title">Title</label><br />
-      <input type="text" id="title" ref="title" /><br />
-      <label for="year">Year</label><br />
-      <input type="number" id="year" ref="year" /><br />
-      <button @click="handleClick">Add movie</button>
-    </form>
-
-    <pageTable></pageTable>
+    <modal-window :is-add-button="true"></modal-window>
+    <page-table></page-table>
   </div>
 </template>
 
 <script>
-import pageTable from "./components/pageTable.vue";
-import navButtons from "./components/navButtons.vue";
-import modalWindow from "./components/modalWindow.vue";
-// import modalPopupTest from "./components/modalPopupTest.vue";
 // import moviesData from "../data/moviesData.json";
-
-import { allMovies } from "./allMovies";
+// import { allMovies } from "./allMovies";
 
 export default {
   name: "App",
   data() {
     return {
-      title: "My Movies",
-      showMovies: true,
-      // movies: moviesData,
-      allMovies,
+      title: "FilmoApika",
+      allMovies: [],
+    };
+  },
+  provide() {
+    return {
+      movies: this.allMovies,
+      deleteMovieInTable: this.deleteMovie,
+      editMovie: this.editMovie,
+      addMovie: this.addMovie,
     };
   },
   methods: {
-    handleClick() {
-      console.log("test", allMovies);
-
-      const title = this.$refs.title.value;
-      const year = this.$refs.year.value;
-
-      // this.movies.push({ id: this.movies.length + 1, name: title, year: year });
+    addMovie(newMovie) {
+      this.allMovies.push(newMovie);
     },
-  },
-  components: {
-    navButtons,
-    pageTable,
-    modalWindow,
-    // modalPopupTest,
-    //HelloWorld,
-    // navButtons, pageTable, *modalWindow
+    deleteMovie(movieId) {
+      const movieIndex = this.allMovies.findIndex(
+        (movie) => movie.id === movieId
+      );
+      this.allMovies.splice(movieIndex, 1);
+    },
+    editMovie(movieId) {},
   },
 };
 </script>
