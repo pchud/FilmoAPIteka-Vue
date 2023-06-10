@@ -13,7 +13,7 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/">MyMovies</a>
+        <a class="navbar-brand" href="/">{{ title }}</a>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
@@ -35,7 +35,13 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+              <a
+                @click="updateMovies()"
+                class="nav-link active"
+                aria-current="page"
+                href="#"
+                >Aktualizuj dane</a
+              >
             </li>
             <li class="nav-item">
               <a
@@ -55,40 +61,55 @@
 
 <script>
 // import HelloWorld from "./components/HelloWorld.vue";
-import { allMovies } from "../allMovies";
-import { fetchDataFromAPI } from "../downloadData";
+import { allMovies, addMovie, findMovie } from "../../allMovies";
+import { downloadMovies, getAllMovies } from "../../api/moviesApi";
 
 import axios from "axios";
 
 export default {
-  name: "App",
+  name: "NavButtons",
+  props: ["title"],
   data() {
     return {
-      movies: allMovies,
+      // movies: allMovies,
     };
   },
   methods: {
-    addMovie() {
-      console.log("Add movie - API not connected");
+    async updateMovies() {
+      const moviesFromSQL = await getAllMovies();
+      moviesFromSQL.forEach((movie) => {
+        if (!this.movies.some((movieInTable) => movieInTable.id === movie.id))
+          this.addMovie({
+            id: movie.id,
+            title: movie.title,
+            year: movie.year,
+          });
+      });
     },
-    downloadMovies() {
-      console.log("Download movies - API not connected");
-      const data = fetchDataFromAPI();
-      console.log(data);
-
-      // const data = fetchDataFromAPI();
-      // console.log(data);
-      // console.log("downloaded");
-      // const newObject = {
-      //   id: 666,
-      //   title: "Film 666",
-      //   year: 2066,
-      // };
-      // Array.prototype.push();
-      // console.log(this.movies);
+    async downloadMovies() {
+      const downloadedMovies = await downloadMovies();
+      console.log(downloadedMovies);
+      downloadedMovies.forEach((movie) => {
+        if (!this.movies.some((movieInTable) => movieInTable.id === movie.id))
+          this.addMovie({
+            id: movie.id,
+            title: movie.title,
+            year: movie.year,
+          });
+      });
     },
   },
-  components: {},
+  inject: ["movies", "addMovie"],
+  beforeMount() {
+    // Pobranie z bazy danych listy filmów i wypełnienie tabeli
+    this.updateMovies();
+  },
+  // beforeUpdate() {
+  //   this.updateMovies();
+  // },
+  // mounted() {
+  //   this.updateMovies();
+  // },
 };
 </script>
 
