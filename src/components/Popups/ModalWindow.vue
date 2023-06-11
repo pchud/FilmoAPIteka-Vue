@@ -1,86 +1,163 @@
 <template>
   <div>
-    <button @click="openModal" class="btn btn-primary">Open popup</button>
-
+    <button
+      @click="openModal"
+      class="btn"
+      :class="{ 'btn-warning': isEditButton, 'btn-primary': isAddButton }"
+    >
+      {{ submitBtn }}
+    </button>
+  </div>
+  <teleport to="body">
     <div v-if="isModalOpen" class="modal">
-      <div class="modal-content">
-        <h2>Adding / Editing movie</h2>
-        <form>
-          <label for="title">Title</label><br />
-          <input type="text" v-model="title" id="title" /><br />
-          <label for="year">Year</label><br />
-          <input type="number" v-model="year" id="year" /><br />
-          <button @click="handleClick" class="btn btn-primary">
-            Add movie / Edit movie
-          </button>
-        </form>
-        <button @click="closeModal" class="btn btn-secondary">Close</button>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">{{ title }}</h3>
+          </div>
+          <div>
+            <div class="modal-body">
+              <!-- <form> -->
+              <div class="mb-3">
+                <label for="title" class="form-label">Tytuł</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="formMovie.title"
+                  id="title"
+                  placeholder="Tytuł"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="title" class="form-label">Rok premiery</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="formMovie.year"
+                  id="year"
+                  placeholder="Rok premiery"
+                />
+              </div>
+              <div>
+                <p v-for="(message, index) in errMessage" :key="index">
+                  {{ message }}
+                </p>
+              </div>
+              <!-- </form>   -->
+            </div>
+            <div class="modal-footer">
+              <button @click="handleClick" class="btn btn-primary">
+                {{ submitBtn }}
+              </button>
+              <button @click="closeModal" class="btn btn-secondary">
+                Zamknij
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </teleport>
 </template>
 
 <script>
-import { addMovie, updateMovie } from "../../api/moviesApi";
+import useValidate from "@vuelidate/core";
+import { between, maxLength, required, helpers } from "@vuelidate/validators";
+import { addMovieApi, updateMovieApi } from "../../api/moviesApi";
 
 export default {
-  props: ["movieId", "isEditButton", "isAddButton"],
+  props: ["movieId", "isEditButton", "isAddButton", "title", "submitBtn"],
+  setup() {
+    return {
+      v$: useValidate(),
+    };
+  },
   data() {
     return {
-      title: "",
-      year: "",
+      // v$: useValidate(),
+      formMovie: {
+        title: "",
+        director: "",
+        year: null,
+        rate: 5,
+      },
+      errMessage: [],
       isModalOpen: false,
+    };
+  },
+  validations() {
+    return {
+      formMovie: {
+        title: {
+          required: helpers.withMessage("Tytuł jest wymagany!", required),
+          maxLength: helpers.withMessage(
+            `Maks. długość tytułu to 200 znaków`,
+            maxLength(200)
+          ),
+        },
+        director: {},
+        year: {
+          required: helpers.withMessage("Rok jest wymagany!", required),
+          betweenValue: helpers.withMessage(
+            "Błędny zakres roku premiery. (1900 - 2200)",
+            between(1900, 2200)
+          ),
+        },
+        rate: {},
+      },
     };
   },
   methods: {
     openModal() {
-      console.log(
-        "isAddButton: ",
-        this.isAddButton,
-        " IsEditButton: ",
-        this.isEditButton
-      );
-      console.log("MoveID: ", this.movieId);
       this.isModalOpen = true;
     },
     closeModal() {
       this.isModalOpen = false;
     },
     async handleClick() {
-      // this.isAddButton ? this.addMovie() : "";
-      this.isEditButton ? this.editMovie() : "";
-    },
+      let formMovie = {};
+      if (this.isAddButton) {
+        formMovie = {
+          title: this.formMovie.title,
+          director: this.formMovie.director,
+          year: this.formMovie.year,
+          rate: this.formMovie.rate,
+          id: this.formMovie.id,
+        };
+        this.v$.$validate();
+        console.log(this.v$);
+        if (!this.v$.$error) {
+          const movie = await addMovieApi(formMovie);
+          alert("Form successfully submitted.");
+          this.addMovieInTable(movie);
+          this.closeModal();
+        } else {
+          console.log(this.v$.$errors);
+          console.log(this.v$.$errors[0].$propertyPath);
+          this.errMessage = [];
+          this.v$.$errors.forEach((error) =>
+            this.errMessage.push(error.$message)
+          );
+          // console.log(this.errMessage);
 
-    async addMovie() {
-      const movie = {
-        title: this.title,
-        director: "test",
-        year: this.year,
-        rate: 0,
-      };
-      const data = await addMovie(movie);
-      console.log(data);
-      // TODO: Sprawdzaj czy dane poprawnie zostały dodane i wtedy zaktualizuj
-      this.movies.push(data);
-      this.closeModal();
-    },
-    async editMovie() {
-      const movie = {
-        id: this.movieId,
-        title: this.title,
-        director: "test",
-        year: this.year,
-        rate: 0,
-      };
-      console.log(movie);
-      const data = await updateMovie(movie);
-      console.log(data);
-      // TODO: Sprawdzaj czy dane poprawnie zostały dodane i wtedy zaktualizuj
-      this.movies.push(data);
-      this.closeModal();
+          alert("Form failed validation.", this.v$.$erorr);
+        }
+      }
+      if (this.isEditButton) {
+        formMovie = {
+          id: this.movieId,
+          title: this.formMovie.title,
+          director: "string",
+          year: this.formMovie.year,
+          rate: 0,
+        };
+        const movie = await updateMovieApi(formMovie);
+        this.editMovieInTable(movie);
+        this.closeModal();
+      }
     },
   },
-  inject: ["movies"],
+  inject: ["movies", "addMovieInTable", "editMovieInTable"],
 };
 </script>
 
@@ -98,13 +175,16 @@ export default {
   z-index: 9999;
 }
 
-.modal-content {
+.modal-content,
+.modal-footer {
   background-color: #fff;
   padding: 20px;
   border-radius: 4px;
+  align-items: center;
+  justify-content: center;
 }
 
-.btn {
+/* .btn {
   margin-top: 10px;
-}
+} */
 </style>

@@ -1,34 +1,47 @@
 <template>
   <tr>
-    <th scope="row">{{ movie.id }}</th>
+    <td>{{ movie.id }}</td>
+    <td>{{ movie.extId > 0 ? "✅ Tak" : "❌ Nie" }}</td>
     <td>{{ movie.title }}</td>
     <td>{{ movie.year }}</td>
+    <td>{{ movie.rate }}</td>
     <td>
-      <modal-window :is-edit-button="true" :movieId="movie.id"></modal-window>
-
-      <button
-        @click="editMovie(movie.id)"
-        type="button"
-        class="btn btn-warning"
-      >
-        Edit
-      </button>
+      <modal-window
+        :is-edit-button="true"
+        :movieId="movie.id"
+        :title="modalTitle"
+        :submitBtn="modalButton"
+      ></modal-window>
     </td>
     <td>
+      <modal-window-test
+        :is-add-button="true"
+        :title="{ test }"
+        :submitBtn="deleteButton"
+      >
+        <template #header>
+          <h3 class="modal-title">Błąd</h3>
+        </template>
+        <template #body> Czy chcesz usunąć film? </template>
+        <template #footer>
+          <button @click="deleteMovie(movie.id)" class="btn btn-danger">
+            Usuń
+          </button>
+        </template>
+      </modal-window-test>
       <button
         @click="deleteMovie(movie.id)"
         type="button"
         class="btn btn-danger"
       >
-        Delete
+        Szybkie usuwanie
       </button>
     </td>
   </tr>
 </template>
 
 <script>
-import { deleteMovie } from "../../api/moviesApi";
-import { deleteMovieStruct } from "../../allMovies";
+import { deleteMovieApi } from "../../api/moviesApi";
 
 export default {
   props: {
@@ -38,26 +51,20 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      modalTitle: "Edytuj film",
+      modalButton: "Edytuj",
+      deleteButton: "Usuń",
+    };
   },
-  inject: ["movies", "deleteMovieInTable"],
+  inject: ["movies", "deleteMovieInTable", "editMovieInTable"],
 
   methods: {
-    deleteMovie(movieId) {
-      // TODO: Otwieranie popupu i odświeżanie danych po usunięciu
-      deleteMovie(movieId);
+    async deleteMovie(movieId) {
+      await deleteMovieApi(movieId);
       this.deleteMovieInTable(movieId);
-      // this.movies = deleteMovieStruct(movieId);
-      console.log("Usunięte", movieId);
-      // Comment: Usuwanie po numerze ID
-      // this.$emit("delete-movie", movieId);
-    },
-    editMovie(movieId) {
-      // Wyświetlenie widoku modalnego
-      console.log("API event - edit movie with Id: ", movieId);
     },
   },
-  components: {},
 };
 </script>
 

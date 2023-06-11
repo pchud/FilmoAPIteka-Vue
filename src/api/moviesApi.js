@@ -1,18 +1,7 @@
 import axios from "axios";
 const apiUrl = "https://localhost:44369/api";
-// const extApiUrl = "https://filmy.programdemo.pl/MyMovies";
 
-// export async function fetchDataFromAPI() {
-//   try {
-//     const response = await axios.get(apiUrl);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Wystąpił błąd podczas pobierania danych:", error);
-//     throw error;
-//   }
-// }
-
-export async function downloadMovies() {
+export async function downloadMoviesApi() {
   try {
     const response = await axios.get(`${apiUrl}/extMovies`);
     return response.data;
@@ -22,7 +11,7 @@ export async function downloadMovies() {
   }
 }
 
-export async function getAllMovies() {
+export async function getAllMoviesApi() {
   try {
     const response = await axios.get(`${apiUrl}/movies`);
     return response.data;
@@ -32,7 +21,7 @@ export async function getAllMovies() {
   }
 }
 
-export async function addMovie(movie) {
+export async function addMovieApi(movie) {
   try {
     const response = await axios.post(`${apiUrl}/movies`, movie);
     return response.data;
@@ -42,9 +31,9 @@ export async function addMovie(movie) {
   }
 }
 
-export async function updateMovie(movie) {
+export async function updateMovieApi(movie) {
   try {
-    const response = await axios.put(`${apiUrl}/movie`, movie);
+    const response = await axios.put(`${apiUrl}/movies `, movie);
     return response.data;
   } catch (error) {
     console.error("Wystąpił błąd podczas pobierania danych:", error);
@@ -52,7 +41,7 @@ export async function updateMovie(movie) {
   }
 }
 
-export async function deleteMovie(id) {
+export async function deleteMovieApi(id) {
   try {
     const response = await axios.delete(`${apiUrl}/movies/${id}`);
     return response.data;
