@@ -11,7 +11,7 @@ import MovieTable from "./components/Table/MovieTable.vue";
 import BaseDialog from "./components/UI/BaseDialog.vue";
 
 import ModalWindowTest from "./components/Popups/ModalWindowTest.vue";
-
+import MessagePopup from "./components/Messages/MessagePopup.vue";
 const app = createApp(App);
 
 // Navigation - Components
@@ -30,5 +30,6 @@ app.component("modal-window", ModalWindow);
 // Tests - Components
 app.component("modal-window-test", ModalWindowTest);
 app.component("base-dialog", BaseDialog);
+app.component("message-popup", MessagePopup);
 
 app.mount("#app");

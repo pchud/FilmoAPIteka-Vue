@@ -2,56 +2,94 @@
   <div>
     <nav-header :title="title"></nav-header>
     <h1>{{ title }}</h1>
+    <button @click="() => togglePopup('timedTrigger')">Open popup</button>
 
+    <message-popup
+      v-if="popupTriggers.buttonTrigger"
+      :togglePopup="() => togglePopup('buttonTrigger')"
+      :messages="messages"
+      title="Lista błędów"
+      header="Lista błędów"
+    ></message-popup>
     <modal-window
+      v-if="popupTriggers.timedTrigger"
+      :togglePopup="() => togglePopup('timedTrigger')"
       :is-add-button="true"
       :title="modalTitle"
       :submitBtn="modalButton"
     ></modal-window>
     <movie-table></movie-table>
   </div>
-  <!-- TEST OKNO MODALNE -->
-  <!-- <base-dialog
-    v-if="!inputIsInvalid"
-    title="Invalid Input"
-    @close="confirmError"
-  >
-    <template #default>
-      <p>Unfortunately, at least one input value is invalid.</p>
-      <p>
-        Please check all inputs and make sure you enter at least a few
-        characters into each input field.
-      </p>
-    </template>
-    <template #actions>
-      <base-button @click="confirmError">Okay</base-button>
-    </template>
-  </base-dialog> -->
 </template>
 
 <script>
+import { compile, reactive, ref } from "vue";
 import NavHeader from "./components/Navigation/NavHeader.vue";
+import MessagePopup from "./components/Messages/MessagePopup.vue";
+import ModalWindow from "./components/Popups/ModalWindow.vue";
+
 export default {
   components: { NavHeader },
-  // components: { BaseDialog },
   name: "App",
+  setup() {
+    const popupTriggers = ref({
+      buttonTrigger: false,
+      timedTrigger: false,
+    });
+    const togglePopup = (trigger) => {
+      popupTriggers.value[trigger] = !popupTriggers.value[trigger];
+    };
+    return {
+      MessagePopup,
+      ModalWindow,
+      popupTriggers,
+      togglePopup,
+    };
+  },
   data() {
     return {
       title: "FilmoAPIteka",
       allMovies: [],
+      messages: [],
       isModalVisible: false,
       modalTitle: "Dodaj film",
       modalButton: "Dodaj",
+      lastMessagesLength: 0,
     };
   },
   provide() {
     return {
+      // Arrays
       movies: this.allMovies,
+      messages: this.messages,
+      // Methods
       deleteMovieInTable: this.deleteMovie,
       editMovieInTable: this.editMovie,
       addMovieInTable: this.addMovie,
+      showMessageWindow: this.togglePopup,
     };
   },
+  mounted() {
+    this.lastMessagesLength = this.messages.length;
+    console.log(this.allMovies);
+  },
+  computed: {
+    isNewMessage() {
+      if (this.messages.length > this.lastMessagesLength) {
+        return true;
+      }
+      return false;
+    },
+  },
+  watch: {
+    isNewMessage(newMessage) {
+      if (newMessage) {
+        this.lastMessagesLength = this.messages.length;
+        this.popupTriggers.buttonTrigger = true;
+      }
+    },
+  },
+
   methods: {
     showModal() {
       this.isModalVisible = true;

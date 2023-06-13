@@ -6,7 +6,10 @@
     <td>{{ movie.year }}</td>
     <td>{{ movie.rate }}</td>
     <td>
+      <button @click="() => togglePopup('timedTrigger')">Open popup</button>
       <modal-window
+        v-if="popupTriggers.timedTrigger"
+        :togglePopup="() => togglePopup('timedTrigger')"
         :is-edit-button="true"
         :movieId="movie.id"
         :title="modalTitle"
@@ -41,9 +44,26 @@
 </template>
 
 <script>
+import { ref } from "vue";
 import { deleteMovieApi } from "../../api/moviesApi";
-
+import MessagePopup from "@/components/Messages/MessagePopup.vue";
+import ModalWindow from "@/components/Popups/ModalWindow.vue";
 export default {
+  setup() {
+    const popupTriggers = ref({
+      buttonTrigger: false,
+      timedTrigger: false,
+    });
+    const togglePopup = (trigger) => {
+      popupTriggers.value[trigger] = !popupTriggers.value[trigger];
+    };
+    return {
+      MessagePopup,
+      ModalWindow,
+      popupTriggers,
+      togglePopup,
+    };
+  },
   props: {
     movie: {
       type: Object,

@@ -3,8 +3,15 @@
     <nav-body :title="title">
       <template v-slot:buttons>
         <nav-button title="Pobierz filmy" @click-action="downloadMovies()" />
-        <nav-button title="Dodaj film" @click-action="addMovie()" />
+        <nav-button
+          title="Dodaj film"
+          @click="showMessageWindow('timedTrigger')"
+        />
         <nav-button title="Aktualizuj dane" @click-action="updateMovies()" />
+        <nav-button
+          title="Sprawdź listę błędów"
+          @click="showMessageWindow('buttonTrigger')"
+        />
       </template>
     </nav-body>
   </header>
@@ -18,17 +25,27 @@ import NavBody from "./NavBody.vue";
 
 export default {
   props: ["title"],
-  inject: ["movies", "addMovieInTable"],
+  inject: ["movies", "addMovieInTable", "messages", "showMessageWindow"],
   methods: {
     async updateMovies() {
-      this.clearTable(this.movies);
-      const moviesFromSQL = await getAllMoviesApi();
-      this.exportMoviesFromApiToTable(moviesFromSQL, this.movies);
+      try {
+        this.clearTable(this.movies);
+        const moviesFromSQL = await getAllMoviesApi();
+        this.exportMoviesFromApiToTable(moviesFromSQL, this.movies);
+      } catch (error) {
+        console.log(error.message);
+        this.messages.push([error.message]);
+      }
     },
     async downloadMovies() {
-      this.updateMovies();
-      const downloadedMovies = await downloadMoviesApi();
-      this.exportMoviesFromApiToTable(downloadedMovies, this.movies);
+      try {
+        this.updateMovies();
+        const downloadedMovies = await downloadMoviesApi();
+        this.exportMoviesFromApiToTable(downloadedMovies, this.movies);
+      } catch (error) {
+        console.log(error.message);
+        this.messages.push([error.message]);
+      }
     },
     isMovieInTable(checkingMovieId, moviesInTable) {
       return moviesInTable.some(
@@ -36,28 +53,30 @@ export default {
       );
     },
     exportMoviesFromApiToTable(moviesFromApi, moviesInTable) {
-      moviesFromApi.forEach((movie) => {
-        console.log(movie);
-        if (!this.isMovieInTable(movie, moviesInTable))
-          this.addMovieInTable({
-            id: movie.id,
-            title: movie.title,
-            year: movie.year,
-            extId: movie.extId,
-            director: movie.director,
-            rate: movie.rate,
-          });
-      });
+      try {
+        moviesFromApi.forEach((movie) => {
+          if (!this.isMovieInTable(movie, moviesInTable))
+            this.addMovieInTable({
+              id: movie.id,
+              extId: movie.extId,
+              title: movie.title,
+              year: movie.year,
+              director: movie.director,
+              rate: movie.rate,
+            });
+        });
+      } catch (error) {
+        console.log(error.message);
+        this.messages.push([error.message]);
+      }
     },
     clearTable(moviesInTable) {
-      // Clear table
       moviesInTable.splice(0, this.movies.length);
     },
   },
   created() {
     // Pobranie z bazy danych listy filmów i wypełnienie tabeli
     this.updateMovies();
-    console.log(this.movies);
   },
   components: {
     NavButton,
