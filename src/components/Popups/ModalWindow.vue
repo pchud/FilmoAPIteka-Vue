@@ -1,15 +1,7 @@
 <template>
-  <div>
-    <button
-      @click="openModal"
-      class="btn"
-      :class="{ 'btn-warning': isEditButton, 'btn-primary': isAddButton }"
-    >
-      {{ submitBtn }}
-    </button>
-  </div>
   <teleport to="body">
-    <div v-if="isModalOpen" class="modal">
+    <!-- <div v-if="isModalOpen" class="modal"> -->
+    <div class="modal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -49,7 +41,7 @@
               <button @click="handleClick" class="btn btn-primary">
                 {{ submitBtn }}
               </button>
-              <button @click="closeModal" class="btn btn-secondary">
+              <button @click="togglePopup()" class="btn btn-secondary">
                 Zamknij
               </button>
             </div>
@@ -66,7 +58,14 @@ import { between, maxLength, required, helpers } from "@vuelidate/validators";
 import { addMovieApi, updateMovieApi } from "../../api/moviesApi";
 
 export default {
-  props: ["movieId", "isEditButton", "isAddButton", "title", "submitBtn"],
+  props: [
+    "movieId",
+    "togglePopup",
+    "isEditButton",
+    "isAddButton",
+    "title",
+    "submitBtn",
+  ],
   setup() {
     return {
       v$: useValidate(),
@@ -74,7 +73,6 @@ export default {
   },
   data() {
     return {
-      // v$: useValidate(),
       formMovie: {
         title: "",
         director: "",
@@ -115,35 +113,43 @@ export default {
       this.isModalOpen = false;
     },
     async handleClick() {
-      let formMovie = {};
       if (this.isAddButton) {
-        formMovie = {
-          title: this.formMovie.title,
-          director: this.formMovie.director,
-          year: this.formMovie.year,
-          rate: this.formMovie.rate,
-          id: this.formMovie.id,
-        };
-        this.v$.$validate();
-        console.log(this.v$);
-        if (!this.v$.$error) {
-          const movie = await addMovieApi(formMovie);
-          alert("Form successfully submitted.");
-          this.addMovieInTable(movie);
-          this.closeModal();
-        } else {
-          console.log(this.v$.$errors);
-          console.log(this.v$.$errors[0].$propertyPath);
-          this.errMessage = [];
-          this.v$.$errors.forEach((error) =>
-            this.errMessage.push(error.$message)
-          );
-          // console.log(this.errMessage);
+        const movie = await this.formAddMovie(
+          this.formMovie,
+          this.v$,
+          NaN,
+          this.errMessage
+        );
 
-          alert("Form failed validation.", this.v$.$erorr);
-        }
+        //   formMovie = {
+        //     title: this.formMovie.title,
+        //     director: this.formMovie.director,
+        //     year: this.formMovie.year,
+        //     rate: this.formMovie.rate,
+        //     id: this.formMovie.id,
+        //   };
+        //   this.v$.$validate();
+        //   console.log(this.v$);
+        //   if (!this.v$.$error) {
+        //     // TODO: OBSŁUGA BŁĘDU!!!
+        //     const movie = await addMovieApi(formMovie);
+        //     alert("Form successfully submitted.");
+        //     this.addMovieInTable(movie);
+        //     this.togglePopup();
+        //   } else {
+        //     console.log(this.v$.$errors);
+        //     console.log(this.v$.$errors[0].$propertyPath);
+        //     this.errMessage = [];
+        //     this.v$.$errors.forEach((error) =>
+        //       this.errMessage.push(error.$message)
+        //     );
+        //     // console.log(this.errMessage);
+        //     alert("Form failed validation.", this.v$.$erorr);
+        //   }
       }
       if (this.isEditButton) {
+        // TODO: Dokończyć funkcję!! Edycji (weryfikacja nie działa)
+        let formMovie = {};
         formMovie = {
           id: this.movieId,
           title: this.formMovie.title,
@@ -153,10 +159,106 @@ export default {
         };
         const movie = await updateMovieApi(formMovie);
         this.editMovieInTable(movie);
-        this.closeModal();
+        this.togglePopup();
+      }
+    },
+
+    async formAddMovie(formMovie, v$, errMessages, validationMessages) {
+      let form = {
+        title: formMovie.title,
+        director: formMovie.director,
+        year: formMovie.year,
+        rate: formMovie.rate,
+        id: formMovie.id,
+      };
+      // this.v$.$validate();
+      // console.log(this.v$);
+      if (!v$.$error) {
+        // TODO: OBSŁUGA BŁĘDU!!!
+        try {
+          const movie = await addMovieApi(form);
+          // return await addMovieApi(form);
+          // alert("Form successfully submitted.");
+          this.addMovieInTable(movie);
+          this.togglePopup();
+        } catch (error) {
+          console.log(error.message);
+          errMessages.push([error.message]);
+        }
+      } else {
+        // console.log(this.v$.$errors);
+        // console.log(this.v$.$errors[0].$propertyPath);
+        validationMessages = [];
+        v$.$errors.forEach((error) => validationMessages.push(error.$message));
+      }
+    },
+
+    async formValidation(formMovie, v$, errMessages, validationMessages) {
+      let form = {
+        title: formMovie.title,
+        director: formMovie.director,
+        year: formMovie.year,
+        rate: formMovie.rate,
+        id: formMovie.id,
+      };
+      // this.v$.$validate();
+      // console.log(this.v$);
+      if (!v$.$error) {
+        // TODO: OBSŁUGA BŁĘDU!!!
+        return await this.handleError(addMovieAndClosePopup(form), errMessages);
+        // try {
+        //   const movie = await addMovieApi(form);
+        //   // return await addMovieApi(form);
+        //   // alert("Form successfully submitted.");
+        //   this.addMovieInTable(movie);
+        //   this.togglePopup();
+        // } catch (error) {
+        //   console.log(error.message);
+        //   errMessages.push([error.message]);
+        // }
+      } else {
+        // console.log(this.v$.$errors);
+        // console.log(this.v$.$errors[0].$propertyPath);
+        validationMessages = [];
+        v$.$errors.forEach((error) => validationMessages.push(error.$message));
+      }
+    },
+    async handleError(fn, errMessages, ...args) {
+      try {
+        return await fn(...args);
+      } catch (error) {
+        console.log(error.message);
+        errMessages.push([error.message]);
+      }
+    },
+    async addMovieAndClosePopup(form) {
+      const movie = await addMovieApi(form);
+      this.addMovieInTable(movie);
+      this.togglePopup();
+    },
+    async editMovie(form) {
+      const movie = await updateMovieApi(form);
+      this.editMovieInTable(movie);
+      this.togglePopup();
+    },
+
+    async formEditMovie(formMovie) {
+      if (this.isEditButton) {
+        // TODO: Dokończyć funkcję!! Edycji (weryfikacja nie działa)
+        formMovie = {
+          id: this.movieId,
+          title: this.formMovie.title,
+          director: "string",
+          year: this.formMovie.year,
+          rate: 0,
+        };
+        const movie = await updateMovieApi(formMovie);
+        this.editMovieInTable(movie);
+        this.togglePopup();
       }
     },
   },
+
   inject: ["movies", "addMovieInTable", "editMovieInTable"],
 };
 </script>
