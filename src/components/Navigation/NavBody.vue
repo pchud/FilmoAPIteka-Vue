@@ -4,7 +4,9 @@
       <a class="navbar-brand" href="/">{{ title }}</a>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <slot name="buttons"> </slot>
+          <slot>
+            <!-- Buttons -->
+          </slot>
         </ul>
       </div>
     </div>

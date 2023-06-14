@@ -1,84 +1,49 @@
 <template>
-  <teleport to="body">
-    <!-- <div v-if="isModalOpen" class="modal"> -->
-    <div class="modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3 class="modal-title">{{ title }}</h3>
-          </div>
-          <div>
-            <div class="modal-body">
-              <!-- <form> -->
-              <div class="mb-3">
-                <label for="title" class="form-label">Tytuł</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="formMovie.title"
-                  id="title"
-                  placeholder="Tytuł"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="title" class="form-label">Rok premiery</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  v-model="formMovie.year"
-                  id="year"
-                  placeholder="Rok premiery"
-                />
-              </div>
-              <div>
-                <p v-for="(message, index) in errMessage" :key="index">
-                  {{ message }}
-                </p>
-              </div>
-              <!-- </form>   -->
-            </div>
-            <div class="modal-footer">
-              <button @click="handleClick" class="btn btn-primary">
-                {{ submitBtn }}
-              </button>
-              <button @click="togglePopup()" class="btn btn-secondary">
-                Zamknij
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </teleport>
+  <message-popup>
+    <message-popup-header :title="title" />
+    <div class="modal-body">Czy chcesz usunąć film?</div>
+    <message-popup-footer>
+      <button @click="deleteMovie(movieId)" class="btn btn-danger">
+        Usuń film
+      </button>
+      <button @click="togglePopup()" class="btn btn-primary">
+        Zamknij popup
+      </button>
+    </message-popup-footer>
+  </message-popup>
 </template>
 
 <script>
+import MessagePopup from "@/components/Messages/MesssagePopup.vue"; //"./MesssagePopup.vue";
+import MessagePopupHeader from "@/components/Messages/MessagePopupHeader.vue";
+import MessagePopupBody from "@/components/Messages/MessagePopupBody.vue";
+import MessagePopupFooter from "@/components/Messages/MessagePopupFooter.vue";
 import useValidate from "@vuelidate/core";
 import { between, maxLength, required, helpers } from "@vuelidate/validators";
 import { addMovieApi, updateMovieApi } from "../../api/moviesApi";
 
 export default {
+  components: {
+    MessagePopup,
+    MessagePopupHeader,
+    // MessagePopupBody,
+    MessagePopupFooter,
+  },
   props: [
     "movieId",
     "togglePopup",
     "isEditButton",
     "isAddButton",
     "title",
-    "submitBtn",
+    "deleteMovie",
   ],
   setup() {
     return {
-      v$: useValidate(),
+      // v$: useValidate(),
     };
   },
   data() {
     return {
-      formMovie: {
-        title: "",
-        director: "",
-        year: null,
-        rate: 5,
-      },
       errMessage: [],
       isModalOpen: false,
     };

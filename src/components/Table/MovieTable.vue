@@ -22,7 +22,10 @@
 </template>
 
 <script>
+import MovieRecord from "@/components/Table/MovieRecord.vue";
+
 export default {
+  components: { MovieRecord },
   inject: ["movies"],
 };
 </script>

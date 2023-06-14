@@ -1,4 +1,21 @@
 <template>
+  <!-- POPUPS -->
+  <edit-movie-popup
+    v-if="popupTriggers.editTrigger"
+    :togglePopup="() => togglePopup('editTrigger')"
+    :is-edit-button="true"
+    :movieId="movie.id"
+    title="Edytuj film"
+    :submitBtn="modalButton"
+  />
+  <delete-movie-popup
+    v-if="popupTriggers.deleteTrigger"
+    :togglePopup="() => togglePopup('deleteTrigger')"
+    title="Usuń film"
+    :movieId="movie.id"
+    :deleteMovie="deleteMovie"
+  />
+  <!-- RECORD -->
   <tr>
     <td>{{ movie.id }}</td>
     <td>{{ movie.extId > 0 ? "✅ Tak" : "❌ Nie" }}</td>
@@ -6,38 +23,16 @@
     <td>{{ movie.year }}</td>
     <td>{{ movie.rate }}</td>
     <td>
-      <button @click="() => togglePopup('timedTrigger')">Open popup</button>
-      <modal-window
-        v-if="popupTriggers.timedTrigger"
-        :togglePopup="() => togglePopup('timedTrigger')"
-        :is-edit-button="true"
-        :movieId="movie.id"
-        :title="modalTitle"
-        :submitBtn="modalButton"
-      ></modal-window>
+      <button class="btn btn-warning" @click="() => togglePopup('editTrigger')">
+        Edytuj
+      </button>
     </td>
     <td>
-      <modal-window-test
-        :is-add-button="true"
-        :title="{ test }"
-        :submitBtn="deleteButton"
-      >
-        <template #header>
-          <h3 class="modal-title">Błąd</h3>
-        </template>
-        <template #body> Czy chcesz usunąć film? </template>
-        <template #footer>
-          <button @click="deleteMovie(movie.id)" class="btn btn-danger">
-            Usuń
-          </button>
-        </template>
-      </modal-window-test>
       <button
-        @click="deleteMovie(movie.id)"
-        type="button"
         class="btn btn-danger"
+        @click="() => togglePopup('deleteTrigger')"
       >
-        Szybkie usuwanie
+        Usuń
       </button>
     </td>
   </tr>
@@ -46,20 +41,17 @@
 <script>
 import { ref } from "vue";
 import { deleteMovieApi } from "../../api/moviesApi";
-import MessagePopup from "@/components/Messages/MessagePopup.vue";
-import ModalWindow from "@/components/Popups/ModalWindow.vue";
+
 export default {
   setup() {
     const popupTriggers = ref({
-      buttonTrigger: false,
-      timedTrigger: false,
+      deleteTrigger: false,
+      editTrigger: false,
     });
     const togglePopup = (trigger) => {
       popupTriggers.value[trigger] = !popupTriggers.value[trigger];
     };
     return {
-      MessagePopup,
-      ModalWindow,
       popupTriggers,
       togglePopup,
     };
@@ -70,15 +62,7 @@ export default {
       required: false,
     },
   },
-  data() {
-    return {
-      modalTitle: "Edytuj film",
-      modalButton: "Edytuj",
-      deleteButton: "Usuń",
-    };
-  },
   inject: ["movies", "deleteMovieInTable", "editMovieInTable"],
-
   methods: {
     async deleteMovie(movieId) {
       await deleteMovieApi(movieId);

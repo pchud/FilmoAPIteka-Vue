@@ -3,15 +3,16 @@ import App from "./App.vue";
 import "bootstrap/dist/js/bootstrap.js";
 import "bootstrap/dist/css/bootstrap.css";
 
+// Navigation
 import NavHeader from "./components/Navigation/NavHeader.vue";
-import ModalPopupTest from "./components/Popups/ModalPopupTest.vue";
-import ModalWindow from "./components/Popups/ModalWindow.vue";
-import MovieRecord from "./components/Table/MovieRecord.vue";
+// Table
 import MovieTable from "./components/Table/MovieTable.vue";
-import BaseDialog from "./components/UI/BaseDialog.vue";
+// Popups
+import AddMoviePopup from "./components/Messages/AddMoviePopup.vue";
+import DeleteMoviePopup from "./components/Messages/DeleteMoviePopup.vue";
+import ErrorsMessagePopup from "./components/Messages/ErrorsMessagePopup.vue";
+import EditMoviePopup from "./components/Messages/EditMoviePopup.vue";
 
-import ModalWindowTest from "./components/Popups/ModalWindowTest.vue";
-import MessagePopup from "./components/Messages/MessagePopup.vue";
 const app = createApp(App);
 
 // Navigation - Components
@@ -19,17 +20,11 @@ app.component("nav-header", NavHeader);
 
 // Table - Components
 app.component("movie-table", MovieTable);
-app.component("movie-record", MovieRecord);
-
-// UI - Components (i.e. buttons)
-app.component("modal-popup-test", ModalPopupTest);
 
 // Modal Window - Component
-app.component("modal-window", ModalWindow);
-
-// Tests - Components
-app.component("modal-window-test", ModalWindowTest);
-app.component("base-dialog", BaseDialog);
-app.component("message-popup", MessagePopup);
+app.component("add-movie-popup", AddMoviePopup);
+app.component("delete-movie-popup", DeleteMoviePopup);
+app.component("errors-message-popup", ErrorsMessagePopup);
+app.component("edit-movie-popup", EditMoviePopup);
 
 app.mount("#app");

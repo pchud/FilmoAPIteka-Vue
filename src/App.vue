@@ -1,47 +1,42 @@
 <template>
   <div>
-    <nav-header :title="title"></nav-header>
-    <h1>{{ title }}</h1>
-    <button @click="() => togglePopup('timedTrigger')">Open popup</button>
-
-    <message-popup
-      v-if="popupTriggers.buttonTrigger"
-      :togglePopup="() => togglePopup('buttonTrigger')"
+    <!-- POPUPS -->
+    <errors-message-popup
+      v-if="popupTriggers.errorsTrigger"
+      :togglePopup="() => togglePopup('errorsTrigger')"
       :messages="messages"
       title="Lista błędów"
       header="Lista błędów"
-    ></message-popup>
-    <modal-window
-      v-if="popupTriggers.timedTrigger"
-      :togglePopup="() => togglePopup('timedTrigger')"
+    />
+    <add-movie-popup
+      v-if="popupTriggers.addMovieTrigger"
+      :togglePopup="() => togglePopup('addMovieTrigger')"
       :is-add-button="true"
-      :title="modalTitle"
+      title="Dodaj film"
       :submitBtn="modalButton"
-    ></modal-window>
-    <movie-table></movie-table>
+    />
+    <!-- PAGE -->
+    <nav-header :title="title"></nav-header>
+    <h1>{{ title }}</h1>
+    <hr />
+    <movie-table />
   </div>
 </template>
 
 <script>
-import { compile, reactive, ref } from "vue";
-import NavHeader from "./components/Navigation/NavHeader.vue";
-import MessagePopup from "./components/Messages/MessagePopup.vue";
-import ModalWindow from "./components/Popups/ModalWindow.vue";
+import { ref } from "vue";
 
 export default {
-  components: { NavHeader },
   name: "App",
   setup() {
     const popupTriggers = ref({
-      buttonTrigger: false,
-      timedTrigger: false,
+      errorsTrigger: false,
+      addMovieTrigger: false,
     });
     const togglePopup = (trigger) => {
       popupTriggers.value[trigger] = !popupTriggers.value[trigger];
     };
     return {
-      MessagePopup,
-      ModalWindow,
       popupTriggers,
       togglePopup,
     };
@@ -51,9 +46,6 @@ export default {
       title: "FilmoAPIteka",
       allMovies: [],
       messages: [],
-      isModalVisible: false,
-      modalTitle: "Dodaj film",
-      modalButton: "Dodaj",
       lastMessagesLength: 0,
     };
   },
@@ -71,7 +63,6 @@ export default {
   },
   mounted() {
     this.lastMessagesLength = this.messages.length;
-    console.log(this.allMovies);
   },
   computed: {
     isNewMessage() {
@@ -91,12 +82,6 @@ export default {
   },
 
   methods: {
-    showModal() {
-      this.isModalVisible = true;
-    },
-    closeModal() {
-      this.isModalVisible = false;
-    },
     addMovie(newMovie) {
       this.allMovies.push(newMovie);
     },
