@@ -76,7 +76,7 @@ export default {
     isNewMessage(newMessage) {
       if (newMessage) {
         this.lastMessagesLength = this.messages.length;
-        this.popupTriggers.buttonTrigger = true;
+        this.popupTriggers.errorsTrigger = true;
       }
     },
   },
