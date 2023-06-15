@@ -1,5 +1,6 @@
 import axios from "axios";
-const apiUrl = "https://localhost:44369/api";
+// const apiUrl = "https://localhost:44369/api";
+const apiUrl = "https://filomoapiteka.azurewebsites.net/api";
 
 export async function downloadMoviesApi() {
   try {
