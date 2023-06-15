@@ -46,11 +46,11 @@
 </template>
 
 <script>
-import MessagePopup from "@/components/Messages/MesssagePopup.vue"; //"./MesssagePopup.vue";
-import MessagePopupHeader from "@/components/Messages/MessagePopupHeader.vue";
-import MessagePopupBody from "@/components/Messages/MessagePopupBody.vue";
+import MessagePopup from "@/components/Messages/UI/MesssagePopup.vue"; //"./MesssagePopup.vue";
+import MessagePopupHeader from "@/components/Messages/UI/MessagePopupHeader.vue";
+import MessagePopupErrorsBody from "@/components/Messages/UI/MessagePopupErrorsBody.vue";
 
-import MessagePopupFooter from "@/components/Messages/MessagePopupFooter.vue";
+import MessagePopupFooter from "@/components/Messages/UI/MessagePopupFooter.vue";
 import useValidate from "@vuelidate/core";
 import { between, maxLength, required, helpers } from "@vuelidate/validators";
 import { addMovieApi, updateMovieApi } from "../../api/moviesApi";
@@ -60,7 +60,7 @@ export default {
   components: {
     MessagePopup,
     MessagePopupHeader,
-    // MessagePopupBody,
+    // MessagePopupErrorsBody,
     MessagePopupFooter,
     BaseInput,
   },

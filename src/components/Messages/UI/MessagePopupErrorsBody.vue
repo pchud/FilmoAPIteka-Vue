@@ -4,7 +4,7 @@
     <div class="alert alert-danger" role="alert">
       <h4 class="alert-heading">{{ header }}</h4>
       <div v-for="(msg, index) in messages" :key="index">
-        <p class="mb-0">{{ index + 1 }} - {{ msg[0] }}</p>
+        <p class="mb-0">{{ index + 1 }} - {{ msg }}</p>
         <hr />
       </div>
     </div>

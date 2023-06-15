@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import NavHeader from "./components/Navigation/NavHeader.vue";
 // Table
 import MovieTable from "./components/Table/MovieTable.vue";
+import MovieRecord from "./components/Table/MovieRecord.vue";
 // Popups
 import AddMoviePopup from "./components/Messages/AddMoviePopup.vue";
 import DeleteMoviePopup from "./components/Messages/DeleteMoviePopup.vue";
@@ -20,6 +21,7 @@ app.component("nav-header", NavHeader);
 
 // Table - Components
 app.component("movie-table", MovieTable);
+app.component("movie-record", MovieRecord);
 
 // Modal Window - Component
 app.component("add-movie-popup", AddMoviePopup);

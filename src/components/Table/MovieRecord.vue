@@ -62,11 +62,15 @@ export default {
       required: false,
     },
   },
-  inject: ["movies", "deleteMovieInTable", "editMovieInTable"],
+  inject: ["movies", "deleteMovieInTable", "editMovieInTable", "messages"],
   methods: {
     async deleteMovie(movieId) {
-      await deleteMovieApi(movieId);
-      this.deleteMovieInTable(movieId);
+      try {
+        await deleteMovieApi(movieId);
+        this.deleteMovieInTable(movieId);
+      } catch (error) {
+        this.messages.push(error.message);
+      }
     },
   },
 };

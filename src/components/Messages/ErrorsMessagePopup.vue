@@ -1,7 +1,7 @@
 <template>
   <message-popup>
     <message-popup-header title="Lista błędów" />
-    <message-popup-body header="Lista błędów" :messages="messages" />
+    <message-popup-errors-body header="Lista błędów" :messages="messages" />
     <message-popup-footer>
       <button @click="confirmErrors()" class="btn btn-danger">
         Potwierdź błędy
@@ -14,16 +14,16 @@
 </template>
 
 <script>
-import MessagePopup from "./MesssagePopup.vue";
-import MessagePopupHeader from "./MessagePopupHeader.vue";
-import MessagePopupBody from "./MessagePopupBody.vue";
-import MessagePopupFooter from "./MessagePopupFooter.vue";
+import MessagePopup from "./UI/MesssagePopup.vue";
+import MessagePopupHeader from "./UI/MessagePopupHeader.vue";
+import MessagePopupErrorsBody from "./UI/MessagePopupErrorsBody.vue";
+import MessagePopupFooter from "./UI/MessagePopupFooter.vue";
 
 export default {
   components: {
     MessagePopup,
     MessagePopupHeader,
-    MessagePopupBody,
+    MessagePopupErrorsBody,
     MessagePopupFooter,
   },
   props: ["title", "togglePopup", "messages", "header"],

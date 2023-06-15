@@ -20,11 +20,7 @@ export default {
     inputClasses: String,
     modelValue: [String, Number],
   },
-  // components: { FormLabel, FormInput },
-  defineAsyncComponent: {
-    // FormInput,
-    // FormLabel,
-  },
+
   methods: {
     passInputValue(value) {
       emit("update:modelValue", value);
