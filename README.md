@@ -187,7 +187,7 @@ Link projektu: [https://github.com/pchud/FilmoAPIteka-Vue](https://github.com/pc
 [forks-shield]: https://img.shields.io/github/forks/pchud/FilmoAPIteka-Vue.svg?style=for-the-badge
 [forks-url]: https://github.com/pchud/FilmoAPIteka-Vue/network/members
 [stars-shield]: https://img.shields.io/github/stars/pchud/FilmoAPIteka-Vue.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
+[stars-url]: https://github.com/pchud/FilmoAPIteka-Vue/stargazers
 [issues-shield]: https://img.shields.io/github/issues/pchud/FilmoAPIteka-Vue.svg?style=for-the-badge
 [issues-url]: https://github.com/pchud/FilmoAPIteka-Vue/issues
 [license-shield]: https://img.shields.io/github/license/pchud/FilmoAPIteka-Vue.svg?style=for-the-badge
