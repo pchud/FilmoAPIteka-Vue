@@ -101,9 +101,7 @@ Poniżej lista użytych technologii, frameworków oraz bibliotek użytych w proj
 ### Link do aplikacji
 
 <p>Aplikacja została udostępniona pod linkiem.</p>
-<p> <strong>Demo:</strong> <a href="https://github.com/othneildrew/Best-README-Template">filmoapiteka.netlify.app</a></p>
-
-....
+<p> <strong>Demo:</strong> <a href="https://filmoapiteka.netlify.app/">filmoapiteka.netlify.app</a></p>
 
 <!-- GETTING STARTED -->
 
