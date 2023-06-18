@@ -75,7 +75,7 @@
 
 ## O Projekcie
 
-[![FilmoAPIteka-Vue.js][product-screenshot]]
+![FilmoAPIteka-Vue.js][product-screenshot]
 Podstawowym celem projektu była realizacja prostej aplikacji webowej przy użyciu frameworka Vue.js. Aplikacja pozwala zarządzać biblioteką filmową. (dodawać, edytować i usuować filmy z biblioteki.)
 
 <p align="right">[<a href="#readme-top">Powrót na górę</a>]</p>
