@@ -12,7 +12,7 @@ import MovieRecord from "./components/Table/MovieRecord.vue";
 import AddMoviePopup from "./components/Messages/AddMoviePopup.vue";
 import DeleteMoviePopup from "./components/Messages/DeleteMoviePopup.vue";
 import ErrorsMessagePopup from "./components/Messages/ErrorsMessagePopup.vue";
-import EditMoviePopup from "./components/Messages/EditMoviePopup.vue";
+// import EditMoviePopup from "./components/Messages/EditMoviePopup.vue";
 
 const app = createApp(App);
 
@@ -27,6 +27,6 @@ app.component("movie-record", MovieRecord);
 app.component("add-movie-popup", AddMoviePopup);
 app.component("delete-movie-popup", DeleteMoviePopup);
 app.component("errors-message-popup", ErrorsMessagePopup);
-app.component("edit-movie-popup", EditMoviePopup);
+// app.component("edit-movie-popup", EditMoviePopup);
 
 app.mount("#app");

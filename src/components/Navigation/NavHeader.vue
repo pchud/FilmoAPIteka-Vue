@@ -19,6 +19,7 @@
 // Components
 import NavButton from "./NavButton.vue";
 import NavBody from "./NavBody.vue";
+
 // API Functions
 import { downloadMoviesApi, getAllMoviesApi } from "../../api/moviesApi";
 
@@ -36,8 +37,7 @@ export default {
         const moviesFromSQL = await getAllMoviesApi();
         this.exportMoviesFromApiToTable(moviesFromSQL, this.movies);
       } catch (error) {
-        console.log(error.message);
-        this.messages.push([error.message]);
+        this.messages.push(error.message);
       }
     },
     async downloadMovies() {
@@ -46,8 +46,7 @@ export default {
         const downloadedMovies = await downloadMoviesApi();
         this.exportMoviesFromApiToTable(downloadedMovies, this.movies);
       } catch (error) {
-        console.log(error.message);
-        this.messages.push([error.message]);
+        this.messages.push(error.message);
       }
     },
     isMovieInTable(checkingMovieId, moviesInTable) {
@@ -69,13 +68,26 @@ export default {
             });
         });
       } catch (error) {
-        console.log(error.message);
-        this.messages.push([error.message]);
+        this.messages.push(error.message);
       }
     },
     clearTable(moviesInTable) {
       moviesInTable.splice(0, this.movies.length);
     },
+    // perfomrOperation(operationFunction) {
+    //   try {
+    //     operationFunction(...args);
+    //   } catch (error) {
+    //     this.messages.push(error.message);
+    //   }
+    // },
+    // actionProcessing() {
+    //   return new Promise((resolve, reject) => {
+    //     setTimeout(() => {
+    //       resolve();
+    //     }, 2000);
+    //   });
+    // },
   },
   created() {
     // Pobranie z bazy danych listy filmów i wypełnienie tabeli

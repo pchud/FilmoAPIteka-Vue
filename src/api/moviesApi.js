@@ -10,9 +10,6 @@ export async function downloadMoviesApi() {
     throw new Error(
       "Wystąpił błąd podczas pobierania filmów. (zewnętrzna baza)"
     );
-    console.log(error.response);
-    console.error("Wystąpił błąd podczas pobierania danych:", error);
-    // throw error;
   }
 }
 
@@ -24,10 +21,6 @@ export async function getAllMoviesApi() {
     throw new Error(
       "Wystąpił błąd podczas pobierania wszystkich filmów z bazy."
     );
-    // console.error("Wystąpił błąd podczas pobierania danych:", error);
-    console.log(error.response);
-    // throw `Błąd z pobranie danych z serwera API. (${error.message})`;
-    console.log("TEST:", error);
   }
 }
 
@@ -36,9 +29,8 @@ export async function addMovieApi(movie) {
     const response = await axios.post(`${apiUrl}/movies`, movie);
     return response.data;
   } catch (error) {
-    throw new Error(`Wystąpił błąd podczas dodawania filmów do bazy.`);
-    console.error("Wystąpił błąd podczas pobierania danych:", error);
-    throw error;
+    console.log(error);
+    throw new Error(`Wystąpił błąd podczas dodawania filmu do bazy.`);
   }
 }
 
@@ -50,9 +42,6 @@ export async function updateMovieApi(movie) {
     throw new Error(
       `Wystąpił błąd podczas aktualizowania filmu w bazie danych.)`
     );
-    // console.error("Wystąpił błąd podczas pobierania danych:", error);
-    // throw error;
-    console.log("TEST:", error);
   }
 }
 
@@ -62,7 +51,5 @@ export async function deleteMovieApi(id) {
     return response.data;
   } catch (error) {
     throw new Error(`Wystąpił błąd podczas usuwania filmu.`);
-    console.error("Wystąpił błąd podczas pobierania danych:", error);
-    throw error;
   }
 }

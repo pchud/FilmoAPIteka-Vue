@@ -3,7 +3,7 @@
     <message-popup-header title="Lista błędów" />
     <message-popup-errors-body header="Lista błędów" :messages="messages" />
     <message-popup-footer>
-      <button @click="confirmErrors()" class="btn btn-danger">
+      <button @click="confirmErrors()" class="btn btn-danger disabled">
         Potwierdź błędy
       </button>
       <button @click="togglePopup()" class="btn btn-primary">
@@ -29,7 +29,7 @@ export default {
   props: ["title", "togglePopup", "messages", "header"],
   methods: {
     confirmErrors() {
-      // Czyszczenie błędów ....
+      // Czyszczenie błędów .... brak implementacji (jeszcze)
     },
   },
 };

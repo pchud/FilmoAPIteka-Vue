@@ -11,7 +11,7 @@
     <add-movie-popup
       v-if="popupTriggers.addMovieTrigger"
       :togglePopup="() => togglePopup('addMovieTrigger')"
-      :is-add-button="true"
+      :is-edit-button="false"
       title="Dodaj film"
       :submitBtn="modalButton"
     />
@@ -51,6 +51,8 @@ export default {
   },
   provide() {
     return {
+      // TODO: Przetestować Vuex.js (store)
+
       // Arrays
       movies: this.allMovies,
       messages: this.messages,
@@ -92,9 +94,13 @@ export default {
       this.allMovies.splice(movieIndex, 1);
     },
     editMovie(editMovie) {
+      console.log("2) parametr EditMovie: ", editMovie);
+      console.log("3) all movies", this.allMovies);
       const movieIndex = this.allMovies.findIndex(
         (movie) => movie.id === editMovie.id
       );
+      console.log("4) movieIndex: ", movieIndex);
+      console.log("5) all movies", this.allMovies);
       if (movieIndex !== 1) this.allMovies[movieIndex] = editMovie;
     },
   },

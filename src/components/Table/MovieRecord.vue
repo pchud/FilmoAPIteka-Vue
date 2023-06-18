@@ -1,6 +1,6 @@
 <template>
   <!-- POPUPS -->
-  <edit-movie-popup
+  <add-movie-popup
     v-if="popupTriggers.editTrigger"
     :togglePopup="() => togglePopup('editTrigger')"
     :is-edit-button="true"
