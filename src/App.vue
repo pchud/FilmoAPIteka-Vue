@@ -4,7 +4,7 @@
     <errors-message-popup
       v-if="popupTriggers.errorsTrigger"
       :togglePopup="() => togglePopup('errorsTrigger')"
-      :messages="errorMessages.messages"
+      :messages="errorMessages"
       title="Lista błędów"
       header="Lista błędów"
     />
@@ -24,13 +24,23 @@
 
 <script>
 // Library
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 // Objects
 import Movies from "./models/Movies";
 import ErrorMessages from "./models/ErrorMessages";
 
 export default {
   name: "App",
+  provide() {
+    return {
+      // TODO: Przetestować Vuex.js (store)
+      // Arrays
+      movies: this.movies,
+      messages: this.errorMessages,
+      // Methods
+      showMessageWindow: this.togglePopup,
+    };
+  },
   setup() {
     const popupTriggers = ref({
       errorsTrigger: false,
@@ -48,25 +58,12 @@ export default {
     return {
       title: "FilmoAPIteka",
       movies: new Movies(),
-      errorMessages: new ErrorMessages(),
+      errorMessages: ErrorMessages,
     };
-  },
-  provide() {
-    return {
-      // TODO: Przetestować Vuex.js (store)
-      // Arrays
-      movies: this.movies,
-      messages: this.errorMessages,
-      // Methods
-      showMessageWindow: this.togglePopup,
-    };
-  },
-  mounted() {
-    this.errorMessages.setCount();
   },
   computed: {
     isNewMessage() {
-      if (this.errorMessages.getCount() > this.errorMessages.lastCount) {
+      if (this.errorMessages.getCount() > this.errorMessages.lastCount.value) {
         return true;
       }
       return false;
@@ -75,10 +72,13 @@ export default {
   watch: {
     isNewMessage(newMessage) {
       if (newMessage) {
-        this.errorMessages.lastCount = this.errorMessages.getCount();
+        this.errorMessages.setCount();
         this.popupTriggers.errorsTrigger = true;
       }
     },
+  },
+  mounted() {
+    this.errorMessages.setCount();
   },
 };
 </script>

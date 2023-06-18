@@ -24,6 +24,17 @@ export async function getAllMoviesApi() {
   }
 }
 
+export async function getMovieApi(movieId) {
+  try {
+    const response = await axios.get(`${apiUrl}/movies/${movieId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      `Wystąpił błąd podczas pobierania filmu o ${movieId} z bazy.`
+    );
+  }
+}
+
 export async function addMovieApi(movie) {
   try {
     const response = await axios.post(`${apiUrl}/movies`, movie);

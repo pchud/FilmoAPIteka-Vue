@@ -11,7 +11,7 @@
       />
       <base-input
         v-model="formMovie.director"
-        label="Dyrektor"
+        label="Reżyser"
         type="text"
         labelClasses="form-label"
         inputClasses="form-control"
@@ -41,10 +41,10 @@
       </div>
     </div>
     <message-popup-footer>
-      <button @click="handleClick" class="btn btn-success">
+      <button class="btn btn-success" @click="handleClick">
         {{ btnName }}
       </button>
-      <button @click="togglePopup()" class="btn btn-primary">
+      <button class="btn btn-primary" @click="togglePopup()">
         Zamknij popup
       </button>
     </message-popup-footer>
@@ -110,7 +110,12 @@ export default {
             between(1900, 2200)
           ),
         },
-        rate: {},
+        rate: {
+          betweenValue: helpers.withMessage(
+            "Błędna ocena. (0 - 10)",
+            between(0, 10)
+          ),
+        },
       },
     };
   },
@@ -123,6 +128,8 @@ export default {
         year: this.formMovie.year,
         rate: this.formMovie.rate,
       };
+      if (this.isEditButton) formMovie.id = this.movieId;
+
       this.isEditButton
         ? this.formValidation(this.editMovieAction, formMovie)
         : this.formValidation(this.addMovieAction, formMovie);
@@ -132,6 +139,7 @@ export default {
       this.errMessage = [];
       if (!this.v$.$error) {
         movieAction(...form);
+        this.togglePopup();
       } else {
         this.v$.$errors.forEach((error) =>
           this.errMessage.push(error.$message)
@@ -143,7 +151,6 @@ export default {
       try {
         const movie = await addMovieApi(forms);
         this.movies.addMovie(movie);
-        this.togglePopup();
       } catch (error) {
         this.messages.push(error.message);
       } finally {
@@ -153,10 +160,8 @@ export default {
     async editMovieAction(forms) {
       this.isProcessing = true;
       try {
-        forms.id = this.movieId;
         const movie = await updateMovieApi(forms);
         this.movies.editMovie(movie);
-        this.togglePopup();
       } catch (error) {
         this.messages.push(error.message);
       } finally {

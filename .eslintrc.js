@@ -3,15 +3,14 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: "plugin:vue/vue3-essential",
+  parser: "vue-eslint-parser",
+
+  extends: ["plugin:vue/vue3-recommended", "plugin:vue/base", "prettier"],
   parserOptions: {
-    "vue/comment-directive": [
-      "error",
-      {
-        reportUnusedDisableDirectives: false,
-      },
-    ],
+    parser: "babel-eslint",
+    ecmaVersion: 6,
   },
+
   plugins: ["vue"],
   rules: {},
 };

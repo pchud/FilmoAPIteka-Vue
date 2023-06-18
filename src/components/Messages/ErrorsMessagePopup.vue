@@ -1,12 +1,15 @@
 <template>
   <message-popup>
     <message-popup-header title="Lista błędów" />
-    <message-popup-errors-body header="Lista błędów" :messages="messages" />
+    <message-popup-errors-body
+      header="Lista błędów"
+      :messages="messages.messages"
+    />
     <message-popup-footer>
-      <button @click="confirmErrors()" class="btn btn-danger disabled">
+      <button class="btn btn-danger" @click="messages.confirm()">
         Potwierdź błędy
       </button>
-      <button @click="togglePopup()" class="btn btn-primary">
+      <button class="btn btn-primary" @click="togglePopup()">
         Zamknij popup
       </button>
     </message-popup-footer>
@@ -27,11 +30,6 @@ export default {
     MessagePopupFooter,
   },
   props: ["togglePopup", "messages"],
-  methods: {
-    confirmErrors() {
-      // Czyszczenie błędów .... brak implementacji (jeszcze)
-    },
-  },
 };
 </script>
 

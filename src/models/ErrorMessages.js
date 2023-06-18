@@ -1,30 +1,22 @@
+import { reactive } from "vue";
+
 export default class ErrorMessages {
-  constructor() {
-    this.messages = [];
-    this.lastCount = 0;
-  }
-  getCount() {
+  static messages = reactive([]);
+  static lastCount = reactive({ value: 0 });
+
+  constructor() {}
+
+  static getCount() {
     return this.messages.length;
   }
-  setCount() {
-    console.log(this.lastCount, this.getCount());
-    this.lastCount = this.getCount();
+  static setCount() {
+    this.lastCount.value = this.getCount();
   }
-  push(message) {
+  static push(message) {
     this.messages.push(message);
   }
-
-  // isNewMessage() {
-  //   if (this.messages.length > this.lastMessagesLength) {
-  //     return true;
-  //   }
-  //   return false;
-  // },
-  // isNewMessage(newMessage, popupTrigger) {
-  //   if (newMessage) {
-  //     this.lastMessagesLength = this.messages.length;
-  //     // this.popupTriggers.errorsTrigger = true;
-  //     popupTrigger = true;
-  //   }
-  // },
+  static confirm() {
+    this.messages.splice(0);
+    this.setCount();
+  }
 }

@@ -1,5 +1,14 @@
+import ErrorMessages from "./ErrorMessages";
+import {
+  getAllMoviesApi,
+  downloadMoviesApi,
+  addMovieApi,
+  updateMovieApi,
+} from "@/api/moviesApi";
+
 export default class Movies {
   constructor() {
+    this.isProcessing = false;
     this.movies = [];
   }
   addMovie(newMovie) {
@@ -17,5 +26,56 @@ export default class Movies {
   }
   clearMovies() {
     this.movies.splice(0, this.movies.length);
+  }
+
+  // TEST FUNCTIONS - Nav Header
+  isMovieInTable(checkMovieId) {
+    return this.movies.some((movie) => movie.id === checkMovieId);
+  }
+
+  exportMoviesApiToTable(moviesFromApi) {
+    try {
+      moviesFromApi.forEach((movie) => {
+        if (!this.isMovieInTable(movie))
+          this.addMovie({
+            id: movie.id,
+            extId: movie.extId,
+            title: movie.title,
+            year: movie.year,
+            director: movie.director,
+            rate: movie.rate,
+          });
+      });
+    } catch (error) {
+      ErrorMessages.push(error.message);
+    }
+  }
+  async updateMovies() {
+    if (this.isProcessing) return;
+    try {
+      this.isProcessing = true;
+      this.clearMovies();
+      const moviesFromSQL = await getAllMoviesApi();
+      this.exportMoviesApiToTable(moviesFromSQL);
+    } catch (error) {
+      ErrorMessages.push(error.message);
+    } finally {
+      this.isProcessing = false;
+    }
+  }
+
+  async downloadMovies() {
+    if (this.isProcessing) return;
+    await this.updateMovies();
+
+    try {
+      this.isProcessing = true;
+      const downloadedMovies = await downloadMoviesApi();
+      this.exportMoviesApiToTable(downloadedMovies);
+    } catch (error) {
+      ErrorMessages.push(error.message);
+    } finally {
+      this.isProcessing = false;
+    }
   }
 }
