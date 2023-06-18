@@ -25,7 +25,7 @@ export default {
     MessagePopupFooter,
     // MessagePopupBody,
   },
-  props: ["title", "deleteMovie", "movieId", "togglePopup"],
+  props: ["title", "deleteMovie", "movieId", "togglePopup", "movies"],
 };
 </script>
 

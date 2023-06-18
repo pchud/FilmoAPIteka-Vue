@@ -33,15 +33,16 @@ export default {
       isProcessing: false,
     };
   },
-  inject: ["movies", "addMovieInTable", "messages", "showMessageWindow"],
+  inject: ["movies", "messages", "showMessageWindow"],
   methods: {
     async updateMovies() {
       if (this.isProcessing) return;
       try {
         this.isProcessing = true;
-        this.clearTable(this.movies);
+        this.movies.clearMovies();
+        // this.clearTable(this.movies.movies);
         const moviesFromSQL = await getAllMoviesApi();
-        this.exportMoviesFromApiToTable(moviesFromSQL, this.movies);
+        this.exportMoviesFromApiToTable(moviesFromSQL, this.movies.movies);
       } catch (error) {
         this.messages.push(error.message);
       } finally {
@@ -54,7 +55,7 @@ export default {
       try {
         this.isProcessing = true;
         const downloadedMovies = await downloadMoviesApi();
-        this.exportMoviesFromApiToTable(downloadedMovies, this.movies);
+        this.exportMoviesFromApiToTable(downloadedMovies, this.movies.movies);
       } catch (error) {
         this.messages.push(error.message);
       } finally {
@@ -70,7 +71,7 @@ export default {
       try {
         moviesFromApi.forEach((movie) => {
           if (!this.isMovieInTable(movie, moviesInTable))
-            this.addMovieInTable({
+            this.movies.addMovie({
               id: movie.id,
               extId: movie.extId,
               title: movie.title,
@@ -82,9 +83,6 @@ export default {
       } catch (error) {
         this.messages.push(error.message);
       }
-    },
-    clearTable(moviesInTable) {
-      moviesInTable.splice(0, this.movies.length);
     },
   },
   created() {

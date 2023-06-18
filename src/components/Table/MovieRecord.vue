@@ -55,6 +55,7 @@ export default {
       togglePopup,
     };
   },
+
   props: {
     movie: {
       type: Object,
@@ -66,14 +67,14 @@ export default {
       isProcessing: false,
     };
   },
-  inject: ["movies", "deleteMovieInTable", "editMovieInTable", "messages"],
+  inject: ["movies", "messages"],
   methods: {
     async deleteMovie(movieId) {
       if (this.isProcessing) return;
       this.isProcessing = true;
       try {
         await deleteMovieApi(movieId);
-        this.deleteMovieInTable(movieId);
+        this.movies.deleteMovie(movieId);
       } catch (error) {
         this.messages.push(error.message);
       } finally {

@@ -7,14 +7,7 @@
 </template>
 
 <script>
-export default {
-  props: ["title", "togglePopup", "messages", "header"],
-  methods: {
-    confirmErrors() {
-      // Czyszczenie błędów ....
-    },
-  },
-};
+export default {};
 </script>
 
 <style>

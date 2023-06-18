@@ -19,12 +19,6 @@ export default {
     inputClasses: String,
     modelValue: [String, Number],
   },
-  // emits: ["update"],
-  // methods: {
-  //   // passInputValue(value) {
-  //   //   emit("update:modelValue", value);
-  //   // },
-  // },
 };
 </script>
 

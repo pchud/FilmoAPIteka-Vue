@@ -142,7 +142,7 @@ export default {
       this.isProcessing = true;
       try {
         const movie = await addMovieApi(forms);
-        this.addMovieInTable(movie);
+        this.movies.addMovie(movie);
         this.togglePopup();
       } catch (error) {
         this.messages.push(error.message);
@@ -155,7 +155,7 @@ export default {
       try {
         forms.id = this.movieId;
         const movie = await updateMovieApi(forms);
-        this.editMovieInTable(movie);
+        this.movies.editMovie(movie);
         this.togglePopup();
       } catch (error) {
         this.messages.push(error.message);
@@ -165,7 +165,7 @@ export default {
     },
   },
 
-  inject: ["movies", "addMovieInTable", "editMovieInTable", "messages"],
+  inject: ["movies", "messages"],
 };
 </script>
 

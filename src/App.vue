@@ -4,7 +4,7 @@
     <errors-message-popup
       v-if="popupTriggers.errorsTrigger"
       :togglePopup="() => togglePopup('errorsTrigger')"
-      :messages="messages"
+      :messages="errorMessages.messages"
       title="Lista błędów"
       header="Lista błędów"
     />
@@ -23,7 +23,11 @@
 </template>
 
 <script>
+// Library
 import { ref } from "vue";
+// Objects
+import Movies from "./models/Movies";
+import ErrorMessages from "./models/ErrorMessages";
 
 export default {
   name: "App",
@@ -43,31 +47,26 @@ export default {
   data() {
     return {
       title: "FilmoAPIteka",
-      allMovies: [],
-      messages: [],
-      lastMessagesLength: 0,
+      movies: new Movies(),
+      errorMessages: new ErrorMessages(),
     };
   },
   provide() {
     return {
       // TODO: Przetestować Vuex.js (store)
-
       // Arrays
-      movies: this.allMovies,
-      messages: this.messages,
+      movies: this.movies,
+      messages: this.errorMessages,
       // Methods
-      deleteMovieInTable: this.deleteMovie,
-      editMovieInTable: this.editMovie,
-      addMovieInTable: this.addMovie,
       showMessageWindow: this.togglePopup,
     };
   },
   mounted() {
-    this.lastMessagesLength = this.messages.length;
+    this.errorMessages.setCount();
   },
   computed: {
     isNewMessage() {
-      if (this.messages.length > this.lastMessagesLength) {
+      if (this.errorMessages.getCount() > this.errorMessages.lastCount) {
         return true;
       }
       return false;
@@ -76,27 +75,9 @@ export default {
   watch: {
     isNewMessage(newMessage) {
       if (newMessage) {
-        this.lastMessagesLength = this.messages.length;
+        this.errorMessages.lastCount = this.errorMessages.getCount();
         this.popupTriggers.errorsTrigger = true;
       }
-    },
-  },
-
-  methods: {
-    addMovie(newMovie) {
-      this.allMovies.push(newMovie);
-    },
-    deleteMovie(movieId) {
-      const movieIndex = this.allMovies.findIndex(
-        (movie) => movie.id === movieId
-      );
-      this.allMovies.splice(movieIndex, 1);
-    },
-    editMovie(editMovie) {
-      const movieIndex = this.allMovies.findIndex(
-        (movie) => movie.id === editMovie.id
-      );
-      if (movieIndex !== 1) this.allMovies[movieIndex] = editMovie;
     },
   },
 };

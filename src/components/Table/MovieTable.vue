@@ -13,7 +13,7 @@
     </thead>
     <tbody>
       <movie-record
-        v-for="movie in movies"
+        v-for="movie in movies.movies"
         :key="movie.id"
         :movie="movie"
       ></movie-record>
