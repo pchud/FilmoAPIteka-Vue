@@ -89,7 +89,7 @@ export default {
       },
       btnName: this.isEditButton ? "Edytuj film" : "Dodaj film",
       errMessage: [],
-      isModalOpen: false,
+      isProcessing: false,
     };
   },
   validations() {
@@ -116,6 +116,7 @@ export default {
   },
   methods: {
     async handleClick() {
+      if (this.isProcessing) return;
       let formMovie = {
         title: this.formMovie.title,
         director: this.formMovie.director,
@@ -128,25 +129,29 @@ export default {
     },
     formValidation(movieAction, ...form) {
       this.v$.$validate();
+      this.errMessage = [];
       if (!this.v$.$error) {
         movieAction(...form);
       } else {
-        this.errMessage = [];
         this.v$.$errors.forEach((error) =>
           this.errMessage.push(error.$message)
         );
       }
     },
     async addMovieAction(forms) {
+      this.isProcessing = true;
       try {
         const movie = await addMovieApi(forms);
         this.addMovieInTable(movie);
         this.togglePopup();
       } catch (error) {
         this.messages.push(error.message);
+      } finally {
+        this.isProcessing = false;
       }
     },
     async editMovieAction(forms) {
+      this.isProcessing = true;
       try {
         forms.id = this.movieId;
         const movie = await updateMovieApi(forms);
@@ -154,6 +159,8 @@ export default {
         this.togglePopup();
       } catch (error) {
         this.messages.push(error.message);
+      } finally {
+        this.isProcessing = false;
       }
     },
   },
@@ -162,26 +169,4 @@ export default {
 };
 </script>
 
-<style>
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal-content,
-.modal-footer {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 4px;
-  align-items: center;
-  justify-content: center;
-}
-</style>
+<style></style>

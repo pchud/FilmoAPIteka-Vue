@@ -6,7 +6,6 @@
     :is-edit-button="true"
     :movieId="movie.id"
     title="Edytuj film"
-    :submitBtn="modalButton"
   />
   <delete-movie-popup
     v-if="popupTriggers.deleteTrigger"
@@ -62,14 +61,23 @@ export default {
       required: false,
     },
   },
+  data() {
+    return {
+      isProcessing: false,
+    };
+  },
   inject: ["movies", "deleteMovieInTable", "editMovieInTable", "messages"],
   methods: {
     async deleteMovie(movieId) {
+      if (this.isProcessing) return;
+      this.isProcessing = true;
       try {
         await deleteMovieApi(movieId);
         this.deleteMovieInTable(movieId);
       } catch (error) {
         this.messages.push(error.message);
+      } finally {
+        this.isProcessing = false;
       }
     },
   },

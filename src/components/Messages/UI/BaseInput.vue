@@ -1,6 +1,6 @@
 <template>
   <div class="mb-3">
-    <label :class="labelClasses"> {{ label }}</label>
+    <label :class="labelClasses">{{ label }}</label>
     <input
       :placeholder="label"
       :class="inputClasses"
@@ -12,7 +12,6 @@
 </template>
 <script>
 export default {
-  emits: ["update"],
   props: {
     type: String,
     label: String,
@@ -20,12 +19,12 @@ export default {
     inputClasses: String,
     modelValue: [String, Number],
   },
-
-  methods: {
-    passInputValue(value) {
-      emit("update:modelValue", value);
-    },
-  },
+  // emits: ["update"],
+  // methods: {
+  //   // passInputValue(value) {
+  //   //   emit("update:modelValue", value);
+  //   // },
+  // },
 };
 </script>
 

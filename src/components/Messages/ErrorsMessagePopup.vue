@@ -26,7 +26,7 @@ export default {
     MessagePopupErrorsBody,
     MessagePopupFooter,
   },
-  props: ["title", "togglePopup", "messages", "header"],
+  props: ["togglePopup", "messages"],
   methods: {
     confirmErrors() {
       // Czyszczenie błędów .... brak implementacji (jeszcze)
