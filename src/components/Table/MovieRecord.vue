@@ -19,6 +19,7 @@
     <td>{{ movie.id }}</td>
     <td>{{ movie.extId > 0 ? "✅ Tak" : "❌ Nie" }}</td>
     <td>{{ movie.title }}</td>
+    <td>{{ movie.director }}</td>
     <td>{{ movie.year }}</td>
     <td>{{ movie.rate }}</td>
     <td>

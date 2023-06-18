@@ -5,6 +5,7 @@
         <th scope="col">#</th>
         <th scope="col">Baza zewnętrzna</th>
         <th scope="col">Tytuł</th>
+        <th scope="col">Reżyser</th>
         <th scope="col">Rok</th>
         <th scope="col">Ocena</th>
         <th scope="col">Edytuj</th>
